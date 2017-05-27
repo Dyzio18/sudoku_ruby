@@ -24,8 +24,8 @@ normal_sudoku = [
 	[1, 5, 4, 9, 3, 8, 6, 7, 2]
 ]
 
-sudoku_1 = Sudoku.new(small_sudoku, 2)
-sudoku_2 = Sudoku.new(normal_sudoku)
+sudoku_1 = Sudoku.new(normal_sudoku)
+sudoku_2 = Sudoku.new(small_sudoku, 2)
 
 ```
 Print board: 
