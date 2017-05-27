@@ -35,44 +35,35 @@ class Sudoku
   end
   
   # enter value to board with coordinates x,y
-  def set( x, y, number )
-    correct = (0..@size_pow).to_a
+  def set( x, y, number=nil )
+    correct = (0..@size_pow-1).to_a
     if ( correct.include? x ) && ( correct.include? y) then
       @board[x][y] = number
+      return true
     else
       puts "Set error, wrong coordinates!"
+      false
     end
   end
   
-  def solve?(s_arr = @board)
-    #check row
-    s_arr.each do |arr|
-      return false unless valid_set?(arr)
-    end
-    #check block
-    get_blocks(s_arr).each do |arr|
-      return false unless valid_set?(arr)
-    end
-    #check column 
-    s_arr.transpose.each do |arr|
-      return false unless valid_set?(arr)
+  def solve?
+    [@board, @board.transpose, get_blocks].each do |arr| 
+      arr.each { |set| return false unless valid_set?(set) }
     end
     true
   end
-  
-private
+
+private 
 
   # check it has all values
   def valid_contents?(arr)
-    arr.each do |e|
-      return false unless (1..@size_pow).include?(e)
-    end
-    return true
+    arr.each { |e| return false unless (1..@size_pow).include?(e) }
+    true
   end
   
   # check if arr has no duplicates
   def has_no_duplicates?(arr)
-    arr.uniq.size < arr.size ? false : true
+    !(arr.uniq.size < arr.size)
   end
   
   def valid_set?(arr)
@@ -80,7 +71,7 @@ private
   end
  
   # check blocks
-  def get_blocks(s_arr)
+  def get_blocks
     blocks = []
     # create N^2 minors
     @size_pow.times do
@@ -92,7 +83,7 @@ private
     # inserts the appropriate numbers to minors
     @size_pow.times do
       @size.times do
-        blocks[minor].push(s_arr[row][col,@size])
+        blocks[minor].push(@board[row][col,@size])
         row+=1
       end
       if minor % @size == (@size-1) then
